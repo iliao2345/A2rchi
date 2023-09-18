@@ -9,7 +9,7 @@ global:
 
 interfaces:
   chat_app:
-    PORT: 7681
+    PORT: 7861
     HOST: "0.0.0.0" # either "0.0.0.0" (for public) or "127.0.0.1" (for internal)
     HOSTNAME: "ppc.mit.edu"  # careful, this is used for the chat service
     template_folder: "/root/A2rchi/A2rchi/interfaces/chat_app/templates"
@@ -32,7 +32,7 @@ chains:
       - Expert 
   chain: 
     # pick one of the models listed in the model class map below
-    MODEL_NAME: OpenAILLM 
+    MODEL_NAME: LlamaLLM 
     # map of all the class models and their keyword arguments
     MODEL_CLASS_MAP:
       OpenAILLM:
@@ -47,7 +47,7 @@ chains:
       LlamaLLM:
         class: LlamaLLM
         kwargs:
-          base_model_path: "/data/submit/juliush/llama_models/Llama-2-7b-chat-hf/" #the location of the model (ex. meta-llama/Llama-2-70b)
+          base_model: "meta-llama/Llama-2-7b-chat-hf" #the location of the model (ex. meta-llama/Llama-2-70b)
           peft_model: null #the location of the finetuning of the model. Can be none
           enable_salesforce_content_safety: True # Enable safety check with Salesforce safety flan t5
           quantization: True #enables 8-bit quantization
@@ -76,7 +76,7 @@ utils:
     # use_HTTP_chromadb_client: False
     vectordb_update_time: 10
     chromadb_host: chromadb
-    chromadb_port: 8002
+    chromadb_port: 8000
     collection_name: "dev_collection"
     reset_collection: True           # reset the entire collection each time it is accessed by a new data manager instance
   embeddings:

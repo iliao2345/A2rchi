@@ -9,7 +9,7 @@ global:
 
 interfaces:
   chat_app:
-    PORT: 7681
+    PORT: 7861
     HOST: "0.0.0.0" # either "0.0.0.0" (for public) or "127.0.0.1" (for internal)
     HOSTNAME: "ppc.mit.edu"  # careful, this is used for the chat service
     template_folder: "/root/A2rchi/A2rchi/interfaces/chat_app/templates"
@@ -47,7 +47,7 @@ chains:
       LlamaLLM:
         class: LlamaLLM
         kwargs:
-          base_model_path: "/data/submit/juliush/llama_models/Llama-2-7b-chat-hf/" #the location of the model (ex. meta-llama/Llama-2-70b)
+          base_model: "meta-llama/Llama-2-7b-chat-hf" #the location of the model (ex. meta-llama/Llama-2-70b)
           peft_model: null #the location of the finetuning of the model. Can be none
           enable_salesforce_content_safety: True # Enable safety check with Salesforce safety flan t5
           quantization: True #enables 8-bit quantization
