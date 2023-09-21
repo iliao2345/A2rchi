@@ -119,8 +119,8 @@ services:
 
   chromadb:
     build:
-      context: ..
-      dockerfile: deploy/chroma/Dockerfile-chroma
+      context: chroma/chroma/
+      dockerfile: Dockerfile
     environment:
       PROD_OR_DEV: dev
     ports:
