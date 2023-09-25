@@ -1,8 +1,8 @@
 services:
   cleo-dev:
     build:
-      context: ..
-      dockerfile: deploy/cleo/Dockerfile-cleo
+      context: ../..
+      dockerfile: deploy/dockerfiles/Dockerfile-cleo
     depends_on:
       chromadb-dev:
         condition: service_healthy
@@ -37,8 +37,8 @@ services:
 
   chat-dev:
     build:
-      context: ..
-      dockerfile: deploy/chat/Dockerfile-chat
+      context: ../..
+      dockerfile: deploy/dockerfiles/Dockerfile-chat
     depends_on:
       chromadb-dev:
         condition: service_healthy
@@ -57,8 +57,8 @@ services:
 
   mailbox-dev:
     build:
-      context: ..
-      dockerfile: deploy/mailbox/Dockerfile-mailbox
+      context: ../..
+      dockerfile: deploy/dockerfiles/Dockerfile-mailbox
     depends_on:
       chromadb-dev:
         condition: service_healthy
@@ -95,8 +95,8 @@ services:
 
   data-manager-dev:
     build:
-      context: ..
-      dockerfile: deploy/data-manager/Dockerfile-data-manager
+      context: ../..
+      dockerfile: deploy/dockerfiles/Dockerfile-data-manager
     depends_on:
       chromadb-dev:
         condition: service_healthy
@@ -119,8 +119,8 @@ services:
 
   chromadb-dev:
     build:
-      context: ..
-      dockerfile: deploy/chroma/Dockerfile-chroma
+      context: ../..
+      dockerfile: deploy/dockerfiles/Dockerfile-chroma
     environment:
       PROD_OR_DEV: dev
     ports:
@@ -140,10 +140,6 @@ services:
 volumes:
   a2rchi-dev-data:
     external: true
-
-networks:
-  default:
-    name: network-dev
 
 secrets:
   imap_user:
