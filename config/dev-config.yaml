@@ -1,4 +1,5 @@
 global:
+  TRAINED_ON: "subMIT (development)"    #used to create name of the specific version of a2rchi we're using
   DATA_PATH: "/root/data/"
   ACCOUNTS_PATH: "/root/.accounts/"
   LOCAL_VSTORE_PATH: "/root/data/vstore/"
@@ -31,6 +32,11 @@ chains:
       - User
       - A2rchi
       - Expert 
+  prompts:
+    # prompt that serves to condense a history and a question into a single question
+    CONDENSING_PROMPT: config/prompts/condense.prompt
+    # main prompt which takes in a single question and a context.
+    MAIN_PROMPT: config/prompts/submit.prompt
   chain: 
     # pick one of the models listed in the model class map below
     MODEL_NAME: OpenAILLM # LlamaLLM

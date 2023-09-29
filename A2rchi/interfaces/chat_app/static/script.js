@@ -18,7 +18,9 @@ const loadDataFromLocalstorage = () => {
 
     const defaultText = `<div class="default-text">
                             <h1>A2rchi</h1>
-                            <p>Start a conversation and explore the power of A2rchi.<br> Your chat history will be displayed here.</p>
+                            <p>Start a conversation and explore the power of A2rchi, specially trained on subMIT.<br> 
+                            Your chat history will be displayed here. <br> <br>
+                            By using this website, you agree to the <a href="/terms">terms and conditions</a>.</p>
                         </div>`
 
     chatContainer.innerHTML = localStorage.getItem("all-chats") || defaultText;
@@ -40,7 +42,7 @@ const refreshChat = async () => {
 }
 
 const getChatResponse = async (incomingChatDiv) => {
-    const API_URL = "http://0.0.0.0:7861/get_chat_response";
+    const API_URL = "http://t3desk019.mit.edu:7861/api/get_chat_response";
     const pElement = document.createElement("div");
 
      // Define the properties and data for the API request
