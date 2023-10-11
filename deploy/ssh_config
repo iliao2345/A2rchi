@@ -16,3 +16,11 @@ Host submit-t3desk
   IdentityFile ~/.ssh/id_rsa_submit
   StrictHostKeyChecking no
 
+Host ppc
+  HostName ppc.mit.edu
+  User a2rchi
+  IdentitiesOnly=yes
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  IdentityFile ~/.ssh/id_rsa_submit
+  StrictHostKeyChecking no
