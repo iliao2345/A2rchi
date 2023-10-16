@@ -63,10 +63,11 @@ packages = [
     "A2rchi.interfaces.chat_app",
     "A2rchi.interfaces.uploader_app",
     "A2rchi.utils",
+    "A2rchi.app"
 ]
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0.0"]
 build-backed = "setuptools.build_meta"
 
 [project.urls]
