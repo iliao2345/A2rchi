@@ -17,7 +17,7 @@ Host submit-t3desk
   StrictHostKeyChecking no
 
 Host ppc
-  HostName ppc.mit.edu
+  HostName submit06.mit.edu
   User a2rchi
   IdentitiesOnly=yes
   PreferredAuthentications publickey
