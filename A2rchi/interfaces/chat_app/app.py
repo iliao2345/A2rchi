@@ -1,6 +1,9 @@
 from A2rchi.chains.chain import Chain
 from A2rchi.utils.config_loader import Config_Loader
 
+#TODO: fix this so that it is not a star import.
+from A2rchi.interfaces.chat_app.file_uploading import *
+
 from flask import request, jsonify, render_template
 from flask_cors import CORS
 from threading import Lock
@@ -167,6 +170,8 @@ class FlaskAppWrapper(object):
         self.add_endpoint('/api/get_chat_response', 'get_chat_response', self.get_chat_response, methods=["POST"])
         self.add_endpoint('/', '', self.index)
         self.add_endpoint('/terms', 'terms', self.terms)
+        self.add_endpoint('/personal_documents', 'personal_documents', self.personal_documents)
+        self.add_endpoint('/master_documents', 'master_documents', self.master_documents)
         self.add_endpoint('/api/like', 'like', self.like,  methods=["POST"])
         self.add_endpoint('/api/dislike', 'dislike', self.dislike,  methods=["POST"])
 
@@ -207,6 +212,12 @@ class FlaskAppWrapper(object):
 
     def index(self):
         return render_template('index.html')
+    
+    def personal_documents(self):
+        return render_template('personal_documents.html')
+    
+    def master_documents(self):
+        return render_template('master_documents.html')
     
     def terms(self):
         return render_template('terms.html')
