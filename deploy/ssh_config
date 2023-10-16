@@ -16,7 +16,7 @@ Host submit-t3desk
   IdentityFile ~/.ssh/id_rsa_submit
   StrictHostKeyChecking no
 
-Host ppc
+Host ppc-host
   HostName submit06.mit.edu
   User a2rchi
   IdentitiesOnly=yes
