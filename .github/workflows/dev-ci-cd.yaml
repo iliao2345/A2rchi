@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/oauth-login
+      - frontend_staging_branch
 jobs:
   deploy-dev-system:
     runs-on: ubuntu-latest
