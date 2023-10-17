@@ -7,7 +7,6 @@ from flask import render_template, request, redirect, url_for, flash, session
 
 import hashlib
 import os
-import urllib
 import yaml
 
 def simple_hash(input_string):

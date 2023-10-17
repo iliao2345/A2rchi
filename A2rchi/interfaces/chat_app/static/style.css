@@ -15,6 +15,7 @@
   --incoming-chat-bg: #444654;
   --outgoing-chat-border: #343541;
   --incoming-chat-border: #444654;
+  --alternative-bckg: #1f1f27;
 }
 .light-mode {
   --text-color: #343541;
@@ -25,6 +26,7 @@
   --incoming-chat-bg: #F7F7F8;
   --outgoing-chat-border: #FFFFFF;
   --incoming-chat-border: #D9D9E3;
+  --alternative-bckg: #a9a9bc;
 }
 body {
   background: var(--outgoing-chat-bg);
@@ -32,6 +34,60 @@ body {
 
 #main {
   transition: margin-left .5s;
+}
+
+/*login page styling */
+.page-wrapper {
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  display: flex;
+}
+
+.login-wrapper {
+  width: 420px;
+  background: var(--alternative-bckg);
+  border: 2px solid var(--outgoing-chat-bg);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: 30px 40px;
+}
+.login-wrapper h1 {
+  font-size:  36px;
+  text-align: center;
+  margin: 0 0 15px 0;
+
+}
+.login-wrapper .login-btn {
+  width: 100%;
+  height: 45px;
+  background: var(--icon-hover-bg);
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-color);
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.login-wrapper .register-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.register-link p a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link p a:HOVER {
+  text-decoration: underline;
 }
 
 /* Main sidebar menu styling */
