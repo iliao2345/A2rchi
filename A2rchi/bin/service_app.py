@@ -1,6 +1,6 @@
 #!/bin/python
-from A2rchi.app.app import FlaskAppWrapper
-from A2rchi.app.user import User
+from A2rchi.interfaces.chat_app import FlaskAppWrapper
+from A2rchi.interfaces.chat_app.user import User
 from A2rchi.utils.config_loader import Config_Loader
 from A2rchi.utils.env import read_secret
 
