@@ -7,7 +7,7 @@ global:
     -".txt"
     -".html"
     -".pdf"
-  DB_INIT_SCRIPT: "/root/A2rchi/A2rchi/app/schema.sql"
+  DB_INIT_SCRIPT: "/root/A2rchi/A2rchi/interfaces/chat_app/schema.sql"
   USE_LOGIN: True
   ALLOW_GUEST_LOGIN: True
   GOOGLE_LOGIN: True
@@ -16,6 +16,8 @@ global:
     - russomatthewd@gmail.com
     - russomatthewd.spam@gmail.com
     - mdrusso@mit.edu
+    - juliush@mit.edu
+    - julius.heitkoetter@gmail.com
 
 interfaces:
   app:
@@ -23,8 +25,8 @@ interfaces:
     EXTERNAL_PORT: 7688
     HOST: "0.0.0.0" # either "0.0.0.0" (for public) or "127.0.0.1" (for internal)
     HOSTNAME: "t3desk019.mit.edu"  # careful, this is used for the chat service
-    template_folder: "/root/A2rchi/A2rchi/app/templates"
-    static_folder: "/root/A2rchi/A2rchi/app/static"
+    template_folder: "/root/A2rchi/A2rchi/interfaces/chat_app/templates"
+    static_folder: "/root/A2rchi/A2rchi/interfaces/chat_app/static"
     num_responses_until_feedback: 3 #the number of responses given by A2rchi until she asks for feedback.
   chat_app:
     PORT: 7861
