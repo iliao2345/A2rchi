@@ -15,9 +15,9 @@
         <div class="login-wrapper">
             <form action="">
                 <h1>Login</h1>
-                {{ login_buttons }}
+                {{ login_buttons|safe }}
                 <div class="register-link">
-                    {{ register_link }}
+                    {{ register_link|safe }}
                 </div>
             </form>
         </div>
