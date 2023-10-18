@@ -1,18 +1,38 @@
 #!/bin/python
 from A2rchi.interfaces.chat_app.app import FlaskAppWrapper
+from A2rchi.interfaces.chat_app.user import User
 from A2rchi.utils.config_loader import Config_Loader
 from A2rchi.utils.env import read_secret
 
 from flask import Flask
+from flask_login import LoginManager
 
 import os
+import sqlite3
 
 # set openai
 os.environ['OPENAI_API_KEY'] = read_secret("OPENAI_API_KEY")
 os.environ['HUGGING_FACE_HUB_TOKEN'] = read_secret("HUGGING_FACE_HUB_TOKEN")
 config = Config_Loader().config["interfaces"]["chat_app"]
 global_config = Config_Loader().config["global"]
-print(f"Starting Chat Service with (host, port): ({config['HOST']}, {config['PORT']})")
+
+# database setup
+print(f"Initializing database")
+DB_PATH = os.path.join(global_config['DATA_PATH'], "flask_sqlite_db")
+
+# read sql script
+sql_script = None
+with open(global_config['DB_INIT_SCRIPT'], 'r') as f:
+    sql_script = f.read()
+
+# connect to db, create user table if it doesn't exist, and commit
+db = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+cursor = db.cursor()
+cursor.executescript(sql_script)
+db.commit()
+cursor.close()
+db.close()
+
 
 def generate_script(config):
     """
@@ -33,10 +53,28 @@ def generate_script(config):
 
     return
 
+# fill in template variables for front-end JS
 generate_script(config)
-app = FlaskAppWrapper(Flask(
+
+# initialize app object
+print("Initializing flask app")
+app = Flask(
     __name__,
     template_folder=config["template_folder"],
     static_folder=config["static_folder"],
-))
-app.run(debug=True, port=config["PORT"], host=config["HOST"])
+)
+
+# User session management setup: https://flask-login.readthedocs.io/en/latest
+print("Setting up login manager")
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Flask-Login helper to retrieve a user from our db
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
+# start app
+print(f"Starting App with (host, port): ({config['HOST']}, {config['PORT']})")
+app = FlaskAppWrapper(app)
+app.run(debug=True, port=config["PORT"], host=config["HOST"], ssl_context="adhoc")
