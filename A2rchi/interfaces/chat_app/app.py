@@ -221,7 +221,7 @@ class FlaskAppWrapper(object): #TODO: UPLOADER_SALT AND ACCOUNTS_FOLDER IS NO LO
 
         # add endpoints for flask app
         self.add_endpoint('/api/get_chat_response', 'get_chat_response', self.get_chat_response, methods=["POST"])
-        self.add_endpoint('/', '', self.index)
+        self.add_endpoint('/', 'index', self.index)
         self.add_endpoint('/terms', 'terms', self.terms)
         self.add_endpoint('/personal_documents', 'personal_documents', self.personal_documents)
         self.add_endpoint('/master_documents', 'master_documents', self.master_documents)
