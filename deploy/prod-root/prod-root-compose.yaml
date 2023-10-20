@@ -1,40 +1,40 @@
 services:
-  chat-prod-801:
-    image: chat-prod-801:${TAG}
+  chat-prod-root:
+    image: chat-prod-root:${TAG}
     build:
       context: ../..
       dockerfile: deploy/dockerfiles/Dockerfile-chat
     depends_on:
-      chromadb-prod-801:
+      chromadb-prod-root:
         condition: service_healthy
     environment:
-      RUNTIME_ENV: prod-801
+      RUNTIME_ENV: prod-root
       OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
       HUGGING_FACE_HUB_TOKEN_FILE: /run/secrets/hf_token
     secrets:
       - openai_api_key
       - hf_token
     volumes:
-      - a2rchi-prod-801-data:/root/data/
+      - a2rchi-prod-root-data:/root/data/
+    ports:
+      - 7684:7861  # host:container
     logging:
       options:
         max-size: 10m
-    ports:
-      - 7683:7861  # host:container
     restart: always
 
-  data-manager-prod-801:
-    image: data-manager-prod-801:${TAG}
+  data-manager-prod-root:
+    image: data-manager-prod-root:${TAG}
     build:
       context: ../..
       dockerfile: deploy/dockerfiles/Dockerfile-data-manager
       args:
-        BUILD_ENV: prod-801
+        BUILD_ENV: prod-root
     depends_on:
-      chromadb-prod-801:
+      chromadb-prod-root:
         condition: service_healthy
     environment:
-      RUNTIME_ENV: prod-801
+      RUNTIME_ENV: prod-root
       FLASK_UPLOADER_APP_SECRET_KEY_FILE: /run/secrets/flask_uploader_app_secret_key
       UPLOADER_SALT_FILE: /run/secrets/uploader_salt
       OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
@@ -45,26 +45,26 @@ services:
       - openai_api_key
       - hf_token
     ports:
-      - 5004:5001  # host:container
+      - 5005:5001  # host:container
     volumes:
-      - a2rchi-prod-801-data:/root/data/
-      - /home/tier3/a2rchi/801-content/:/root/data/801-content/
+      - a2rchi-prod-root-data:/root/data/
+      - /home/tier3/a2rchi/root-content/:/root/data/root-content/
     logging:
       options:
         max-size: 10m
     restart: always
 
-  chromadb-prod-801:
-    image: chromadb-prod-801:${TAG}
+  chromadb-prod-root:
+    image: chromadb-prod-root:${TAG}
     build:
       context: ../..
       dockerfile: deploy/dockerfiles/Dockerfile-chroma
     environment:
-      RUNTIME_ENV: prod-801
+      RUNTIME_ENV: prod-root
     ports:
-      - 8003:8000  # host:container
+      - 8004:8000  # host:container
     volumes:
-      - a2rchi-prod-801-data:/chroma/chroma/
+      - a2rchi-prod-root-data:/chroma/chroma/
     logging:
       options:
         max-size: 10m
@@ -79,7 +79,7 @@ services:
       start_interval: 5s
 
 volumes:
-  a2rchi-prod-801-data:
+  a2rchi-prod-root-data:
     external: true
 
 secrets:

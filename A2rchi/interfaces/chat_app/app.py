@@ -11,6 +11,7 @@ import numpy as np
 import json
 import os
 import yaml
+import time
 
 # DEFINITIONS
 QUERY_LIMIT = 1000 # max number of queries 
@@ -56,7 +57,7 @@ class ChatWrapper:
 
 
     @staticmethod
-    def update_or_add_discussion(data_path, json_file, discussion_id, discussion_contents):
+    def update_or_add_discussion(data_path, json_file, discussion_id, discussion_contents = None, discussion_feedback = None):
         print(" INFO - entered update_or_add_discussion.")
 
         # read the existing JSON data from the file
@@ -70,7 +71,22 @@ class ChatWrapper:
             print(" ERROR - json_file not found. Creating a new one")
 
         # update or add discussion
-        data[str(discussion_id)] = discussion_contents
+        discussion_dict = data.get(str(discussion_id), {})
+
+        discussion_dict["meta"] = discussion_dict.get("meta", {})
+        if str(discussion_id) not in data.keys(): #first time in discusssion
+            discussion_dict["meta"]["time_first_used"] = time.time()
+        discussion_dict["meta"]["time_last_used"] = time.time()
+
+        if discussion_contents is not None:
+            print(" INFO - found contents.")
+            discussion_dict["contents"] = discussion_contents
+            discussion_dict["meta"]["times_chain_was_called"] = discussion_dict["meta"]["times_chain_was_called"] + [time.time()] if ("times_chain_was_called" in discussion_dict["meta"].keys()) else [time.time()]
+        if discussion_feedback is not None:
+            print(" INFO - found feedback.")
+            discussion_dict["feedback"] = discussion_dict["feedback"] + [discussion_feedback] if ("feedback" in discussion_dict.keys() and isinstance(discussion_dict["feedback"], List)) else [discussion_feedback]
+        
+        data[str(discussion_id)] = discussion_dict
 
         # create data path if it doesn't exist
         os.makedirs(data_path, exist_ok=True)
@@ -130,7 +146,7 @@ class ChatWrapper:
             else:
                 output = "<p>" + result["answer"] + "</p>"
 
-            ChatWrapper.update_or_add_discussion(self.data_path, "conversations_test.json", discussion_id, history)
+            ChatWrapper.update_or_add_discussion(self.data_path, "conversations_test.json", discussion_id, discussion_contents = history + [("A2rchi", output)])
 
         except Exception as e:
             raise e
@@ -145,6 +161,8 @@ class FlaskAppWrapper(object):
         print(" INFO - entering FlaskAppWrapper")
         self.app = app
         self.configs(**configs)
+        self.global_config = Config_Loader().config["global"]
+        self.data_path = self.global_config["DATA_PATH"]
 
         # create the chat from the wrapper
         self.chat = ChatWrapper()
@@ -156,6 +174,8 @@ class FlaskAppWrapper(object):
         self.add_endpoint('/api/get_chat_response', 'get_chat_response', self.get_chat_response, methods=["POST"])
         self.add_endpoint('/', '', self.index)
         self.add_endpoint('/terms', 'terms', self.terms)
+        self.add_endpoint('/api/like', 'like', self.like,  methods=["POST"])
+        self.add_endpoint('/api/dislike', 'dislike', self.dislike,  methods=["POST"])
 
     def configs(self, **configs):
         for config, value in configs:
@@ -197,3 +217,69 @@ class FlaskAppWrapper(object):
     
     def terms(self):
         return render_template('terms.html')
+    
+    def like(self):
+        self.chat.lock.acquire()
+        try:
+            # Get the JSON data from the request body
+            data = request.json
+
+            # Extract the HTML content and any other data you need
+            chat_content = data.get('content')
+            discussion_id = data.get('discussion_id')
+            message_id = data.get('message_id')
+
+            feedback = {
+                "chat_content" :  chat_content,
+                "message_id"   :  message_id,
+                "feedback"     :  "like",
+            }
+            ChatWrapper.update_or_add_discussion(self.data_path, "conversations_test.json", discussion_id, discussion_feedback = feedback)
+
+            response = {'message': 'Liked', 'content': chat_content}
+            return jsonify(response), 200
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+        # According to the Python documentation: https://docs.python.org/3/tutorial/errors.html#defining-clean-up-actions
+        # this will still execute, before the function returns in the try or except block.
+        finally:
+            self.chat.lock.release()
+
+    def dislike(self):
+        self.chat.lock.acquire()
+        try:
+            # Get the JSON data from the request body
+            data = request.json
+
+            # Extract the HTML content and any other data you need
+            chat_content = data.get('content')
+            discussion_id = data.get('discussion_id')
+            message_id = data.get('message_id')
+            message = data.get('message')
+            incorrect = data.get('incorrect')
+            unhelpful = data.get('unhelpful')
+            inappropriate = data.get('inappropriate')
+
+            feedback = {
+                "chat_content" :  chat_content,
+                "message_id"   :  message_id,
+                "feedback"     :  "dislike",
+                "message"      :  message,
+                "incorrect"    :  incorrect,
+                "unhelpful"    :  unhelpful,
+                "inappropriate":  inappropriate,
+            }
+            ChatWrapper.update_or_add_discussion(self.data_path, "conversations_test.json", discussion_id, discussion_feedback = feedback)
+
+            response = {'message': 'Disliked', 'content': chat_content}
+            return jsonify(response), 200
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+        # According to the Python documentation: https://docs.python.org/3/tutorial/errors.html#defining-clean-up-actions
+        # this will still execute, before the function returns in the try or except block.
+        finally:
+            self.chat.lock.release()
